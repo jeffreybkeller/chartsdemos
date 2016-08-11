@@ -1,0 +1,69 @@
+<html>
+<head>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawWeightChart);
+    google.charts.setOnLoadCallback(drawBloodPressureChart);
+            
+    function drawWeightChart() { 
+      var weightDataTable = new google.visualization.DataTable();
+      weightDataTable.addColumn({ type: 'date', id: 'Date' });
+      weightDataTable.addColumn({ type: 'number', id: 'Weight', label: "Weight" });
+      weightDataTable.addRows([
+        [new Date('07/01/2016'),  180],
+        [new Date('07/08/2016'),  190],
+        [new Date('08/22/2016'),  191],
+        [new Date('08/25/2016'),  210]
+      ]);
+      drawChart("weight", weightDataTable);
+    }
+    function drawBloodPressureChart() { 
+      var bloodPressureDataTable = new google.visualization.DataTable();
+      bloodPressureDataTable.addColumn({ type: 'date', id: 'Date' });
+      bloodPressureDataTable.addColumn({ type: 'number', id: 'Weight', label: "Systolic" });
+      bloodPressureDataTable.addColumn({ type: 'number', id: 'Weight', label: "Diastolic" });
+      bloodPressureDataTable.addRows([
+        [new Date('08/01/2016'),  80, 90],
+        [new Date('08/08/2016'),  90, 70],
+        [new Date('08/15/2016'),  100, 50],
+        [new Date('08/22/2016'),  91, 60],
+        [new Date('08/25/2016'),  20, 30]
+      ]);
+      drawChart("blood_pressure", bloodPressureDataTable);
+    }
+
+    function drawChart(element_id, dataTable) {
+			
+      var chartWidth = 500;
+      var options = {	  
+        hAxis: {
+          gridlines: { count: -1 }
+        },
+        legend: {
+          position: 'top',
+          alignment: 'end'
+        },
+        width: chartWidth,
+        height: chartWidth * 0.3,
+        chartArea: { 
+          top: 30,
+          bottom: 20
+        },
+        pointsVisible: true
+      };
+      
+      var container = document.getElementById(element_id);
+      var chart = new google.visualization.LineChart(container);
+
+      chart.draw(dataTable, options);
+    }
+  </script>
+</head>
+<body>
+  <h2>Weight</h2>
+  <div id="weight"></div>
+  <h2>Blood Pressure</h2>
+  <div id="blood_pressure"></div>
+</body>
+</html>
