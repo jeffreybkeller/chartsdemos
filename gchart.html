@@ -9,23 +9,12 @@
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawWeightChart);
     google.charts.setOnLoadCallback(drawBloodPressureChart);
-            
-    function drawWeightChart() { 
-      var weightDataTable = new google.visualization.DataTable();
-      weightDataTable.addColumn({ type: 'date', id: 'Date' });
-      weightDataTable.addColumn({ type: 'number', id: 'Weight', label: "Weight" });
-      weightDataTable.addRows([
-        [new Date('07/01/2016'),  180],
-        [new Date('07/08/2016'),  190],
-        [new Date('08/22/2016'),  191],
-        [new Date('08/25/2016'),  210]
-      ]);
-      drawChart("weight", weightDataTable);
-      
+    
+    function customizations(chartId) {
       var maxY = 0;
       var minX = 999;
 
-      $("#weight g[clip-path] g rect").each(function() {
+      $("#" + chartId + " g[clip-path] g rect").each(function() {
 
         // Calculate the maximum y value for horizontal lines, which
         // will be our horizontal axis
@@ -43,16 +32,30 @@
             
       // Color the axis. We will change this to give a class, maybe, so 
       // we can control it via CSS
-      $("#weight g[clip-path] g rect[width='1'][x='" + minX + "']").attr("fill", "#444444")
-      $("#weight g[clip-path] g rect[height='1'][y='" + maxY + "']").attr("fill", "#444444")
+      $("#" + chartId + " g[clip-path] g rect[width='1'][x='" + minX + "']").attr("fill", "#444444")
+      $("#" + chartId + " g[clip-path] g rect[height='1'][y='" + maxY + "']").attr("fill", "#444444")
 
       // Slide the horizontal gridlines to the right 1 pixel. We could
       // also shorten the line, but it's not visible in our use case
       // anyway. They were overlapping the y-axis, causing gaps in the line,
       // and z-index has no impact in this situation
-      currentX = $("#weight g[clip-path] g rect[height='1'][y!='" + maxY + "']").attr("x");
-      $("#weight g[clip-path] g rect[height='1'][y!='" + maxY + "']").attr("x", currentX + 1);
+      currentX = $("#" + chartId + " g[clip-path] g rect[height='1'][y!='" + maxY + "']").attr("x");
+      $("#" + chartId + " g[clip-path] g rect[height='1'][y!='" + maxY + "']").attr("x", currentX + 1);
       
+    }
+    
+    function drawWeightChart() { 
+      var weightDataTable = new google.visualization.DataTable();
+      weightDataTable.addColumn({ type: 'date', id: 'Date' });
+      weightDataTable.addColumn({ type: 'number', id: 'Weight', label: "Weight" });
+      weightDataTable.addRows([
+        [new Date('07/01/2016'),  180],
+        [new Date('07/08/2016'),  190],
+        [new Date('08/22/2016'),  191],
+        [new Date('08/25/2016'),  210]
+      ]);
+      drawChart("weight", weightDataTable);
+      customizations("weight");
     }
     
     function drawBloodPressureChart() { 
@@ -68,6 +71,7 @@
         [new Date('08/25/2016'),  20, 30]
       ]);
       drawChart("blood_pressure", bloodPressureDataTable);
+      customizations("blood_pressure");
     }
 
     function drawChart(element_id, dataTable) {
