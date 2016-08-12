@@ -1,5 +1,10 @@
 <html>
 <head>
+  <style>
+  .axis {
+    fill: #444444;
+  }
+  </style>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.0.js" 
     integrity="sha256-slogkvB1K3VOkzAI8QITxV3VzpOnkeNVsKvtkYLMjfk="
@@ -12,7 +17,7 @@
     
     function customizations(chartId) {
       var maxY = 0;
-      var minX = 999;
+      var minX = 999999;
 
       $("#" + chartId + " g[clip-path] g rect").each(function() {
 
@@ -32,8 +37,8 @@
             
       // Color the axis. We will change this to give a class, maybe, so 
       // we can control it via CSS
-      $("#" + chartId + " g[clip-path] g rect[width='1'][x='" + minX + "']").attr("fill", "#444444")
-      $("#" + chartId + " g[clip-path] g rect[height='1'][y='" + maxY + "']").attr("fill", "#444444")
+      $("#" + chartId + " g[clip-path] g rect[width='1'][x='" + minX + "']").addClass("axis")
+      $("#" + chartId + " g[clip-path] g rect[height='1'][y='" + maxY + "']").addClass("axis")
 
       // Slide the horizontal gridlines to the right 1 pixel. We could
       // also shorten the line, but it's not visible in our use case
