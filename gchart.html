@@ -76,7 +76,7 @@
 
     function drawChart(element_id, dataTable) {
 
-      var chartWidth = 500;
+      var chartWidth = $("." + element_id).width();
       var options = {	  
         hAxis: {
           baselineColor: '#FF0000',
@@ -107,23 +107,20 @@
       chart.draw(dataTable, options);
     }
     
-  /*  $(window).load(function() {
-      console.log('x');
-      $("#weight g").each(function() {
-        console.log("y");
-      });
-      var gs = $("g");
-      $("#weight").each(function() {
-        console.log("y2");
-        console.log($(this));
-        $(this).find("g").each(function() {
-          console.log("z");
-          // `this` is the div
-          console.log(this);
-        });
-      });
-    })
-    */
+    //create trigger to resizeEnd event     
+    $(window).resize(function() {
+        if(this.resizeTO) clearTimeout(this.resizeTO);
+        this.resizeTO = setTimeout(function() {
+            $(this).trigger('resizeEnd');
+        }, 500);
+    });
+
+    //redraw graph when window resize is completed  
+    $(window).on('resizeEnd', function() {
+        drawWeightChart();
+        drawBloodPressureChart();
+    });
+
   </script>
 </head>
 <body>
