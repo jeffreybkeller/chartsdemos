@@ -1,6 +1,10 @@
 <html>
 <head>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.0.js" 
+    integrity="sha256-slogkvB1K3VOkzAI8QITxV3VzpOnkeNVsKvtkYLMjfk="
+    crossorigin="anonymous">
+  </script>
   <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawWeightChart);
@@ -17,7 +21,40 @@
         [new Date('08/25/2016'),  210]
       ]);
       drawChart("weight", weightDataTable);
+      
+      var maxY = 0;
+      var minX = 999;
+
+      $("#weight g[clip-path] g rect").each(function() {
+
+        // Calculate the maximum y value for horizontal lines, which
+        // will be our horizontal axis
+        if ($(this).attr("height") == 1 && parseInt($(this).attr("y")) > maxY) {
+          maxY = parseInt($(this).attr("y"))
+        }
+        
+        // Calculate the minimum x value for vertical lines, which
+        // will be our vertical axis
+        if ($(this).attr("width") == 1 && parseInt($(this).attr("x")) < minX) {
+          minX = parseInt($(this).attr("x"))
+        }
+        
+      });
+            
+      // Color the axis. We will change this to give a class, maybe, so 
+      // we can control it via CSS
+      $("#weight g[clip-path] g rect[width='1'][x='" + minX + "']").attr("fill", "#444444")
+      $("#weight g[clip-path] g rect[height='1'][y='" + maxY + "']").attr("fill", "#444444")
+
+      // Slide the horizontal gridlines to the right 1 pixel. We could
+      // also shorten the line, but it's not visible in our use case
+      // anyway. They were overlapping the y-axis, causing gaps in the line,
+      // and z-index has no impact in this situation
+      currentX = $("#weight g[clip-path] g rect[height='1'][y!='" + maxY + "']").attr("x");
+      $("#weight g[clip-path] g rect[height='1'][y!='" + maxY + "']").attr("x", currentX + 1);
+      
     }
+    
     function drawBloodPressureChart() { 
       var bloodPressureDataTable = new google.visualization.DataTable();
       bloodPressureDataTable.addColumn({ type: 'date', id: 'Date' });
@@ -38,8 +75,14 @@
       var chartWidth = 500;
       var options = {	  
         hAxis: {
-          gridlines: { count: -1 }
+          baselineColor: '#FF0000',
+          gridlineColor: '#FFF',
+          format: 'M.dd.yy'
         },
+        vAxis:{
+         baselineColor: '#000',
+         gridlineColor: '#FFF'
+       },
         legend: {
           position: 'top',
           alignment: 'end'
@@ -48,7 +91,7 @@
         height: chartWidth * 0.3,
         chartArea: { 
           top: 30,
-          bottom: 20
+          bottom: 50
         },
         pointsVisible: true,
         colors: ['#5A84A2']
@@ -59,6 +102,24 @@
 
       chart.draw(dataTable, options);
     }
+    
+  /*  $(window).load(function() {
+      console.log('x');
+      $("#weight g").each(function() {
+        console.log("y");
+      });
+      var gs = $("g");
+      $("#weight").each(function() {
+        console.log("y2");
+        console.log($(this));
+        $(this).find("g").each(function() {
+          console.log("z");
+          // `this` is the div
+          console.log(this);
+        });
+      });
+    })
+    */
   </script>
 </head>
 <body>
